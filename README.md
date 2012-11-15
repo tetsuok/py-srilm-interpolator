@@ -18,11 +18,11 @@ I have tested scripts on Linux and OS X (10.8.2).
 ## Software Requirements ##
 
 - [SRILM](http://www.speech.sri.com/projects/srilm/download.html)
-- python [setuptools] (http://pypi.python.org/pypi/setuptools) (optional)
+- python [setuptools](http://pypi.python.org/pypi/setuptools) (optional)
 
 ## Installation ##
 
-The installation process is not necessary. Just download the pacakges on your favorite place.
+The installation process is not necessary. Just download the packages on your favorite place.
 
     $ git clone git://github.com/tetsuok/py-srilm-interpolator.git
 
@@ -65,11 +65,11 @@ Lines beginning with '#' or ';' are ignored and treated as comments.
 
 Please see an example config file `example/example.cfg`.
 
-In most cases, it will suffce to copy `example/example.cfg` and to
-edit the path to SRILM, order of langauge models, and path to language
+In most cases, it will suffice to copy `example/example.cfg` and to
+edit the path to SRILM, order of language models, and path to language
 models.
 
-I recomment using the absolute path to SRILM and language models when
+I recommend using the absolute path to SRILM and language models when
 you edit path to them.
 
 ### Determine interpolation weights ###
