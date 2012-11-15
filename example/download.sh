@@ -2,15 +2,10 @@
 # Copyright 2012 Tetsuo Kiso. All rights reserved.
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
-
+set -x
 os=`uname -s`
 
 downloader="wget"
-
-# OS X does not have wget by default...
-if [ "$os" = "Darwin" ]; then
-    downloader="curl -O"
-fi
 
 echo "Trying to download files from github"
 header=https://github.com/downloads/tetsuok/py-srilm-interpolator
