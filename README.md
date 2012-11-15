@@ -23,7 +23,7 @@ SRI's `compute-best-mix`) depends on `gawk`.
 
 ## Installation ##
 
-The installation process is not necessary. Just download the packages on your favorite place.
+The installation process is not necessary. Just download this package on your favorite place.
 
     $ git clone git://github.com/tetsuok/py-srilm-interpolator.git
 
@@ -94,3 +94,7 @@ References
 ----------
 
 [Joshua Building large LMs with SRILM](http://joshua-decoder.org/4.0/large-lms.html)
+
+## License ##
+
+This code is distributed under the New BSD License. See the file LICENSE.
