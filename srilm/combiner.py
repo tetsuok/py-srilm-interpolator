@@ -43,6 +43,8 @@ def read_best_lambdas(filename):
             m = reg.findall(s)
             if m:
                 break
+    if len(m) == 0:
+        raise srienv.FormatError('file {0} is broken!'.format(filename))
     return [float(i) for i in m[0].split(' ')]
 
 def combine_wrapper(env, opts, lms, lambdas, out):
