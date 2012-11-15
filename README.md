@@ -9,11 +9,12 @@ This package provides two features:
 
 Note that you should prepare for individual language models you want
 to interpolate with SRILM before using this package.
-
-Please note that *this script does NOT work without SRILM*.  You need
+Please also note that *this script does NOT work without SRILM*.  You need
 to install SRILM on your machine first.
 
-I have tested scripts on Linux and OS X (10.8.2).
+I have tested scripts on Linux and OS X (10.8.2).  OS X users might
+want to install `gawk` since `interpolator.py` (it calls internally
+SRI's `compute-best-mix`) depends on `gawk`.
 
 ## Software Requirements ##
 
