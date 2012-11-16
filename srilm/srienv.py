@@ -101,6 +101,7 @@ class Env(object):
       for p in programs:
         bin = os.path.join(self.base_bin, p)
         if not os.path.exists(bin):
-          raise IOError('no such file or directory: {0}. Have you compiled SRILM binaries?'.format(bin))
+          raise IOError('no such file or directory: {0}. '
+                        'Have you compiled SRILM binaries?'.format(bin))
         if p not in self.programs:
           self.programs[p] = bin

@@ -29,60 +29,60 @@ import srienv
 
 parser = optparse.OptionParser(usage='%prog [options]')
 parser.add_option('-c', '--config', dest='conf',
-    default=None, help='Path to config files (mandatory).')
+                  default=None, help='Path to config files (mandatory).')
 parser.add_option('-o', '--out', dest='out',
-    default='mixed_lm.gz', help='Path to the combined langauge model.')
+                  default='mixed_lm.gz', help='Path to the combined langauge model.')
 
 logs = sys.stderr
 
 def read_best_lambdas(filename):
-    reg = re.compile(r'\((.*)\)')
-    with open(filename) as f:
-        for l in f:
-            s = l.rstrip()
-            m = reg.findall(s)
-            if m:
-                break
-    if len(m) == 0:
-        raise srienv.FormatError('file {0} is broken!'.format(filename))
-    return [float(i) for i in m[0].split(' ')]
+  reg = re.compile(r'\((.*)\)')
+  with open(filename) as f:
+    for l in f:
+      s = l.rstrip()
+      m = reg.findall(s)
+      if m:
+        break
+  if len(m) == 0:
+    raise srienv.FormatError('file {0} is broken!'.format(filename))
+  return [float(i) for i in m[0].split(' ')]
 
 def combine_wrapper(env, opts, lms, lambdas, out):
-    i = 0
-    cmd = env.programs['ngram'] + ' ' + opts
-    for f, l in zip(lms, lambdas):
-        if i == 0:
-            lm_flag = '-lm {0}'.format(f[1])
-            lambda_flag = '-lambda {0}'.format(l)
-        elif i == 1:
-            lm_flag = '-mix-lm {0}'.format(f[1])
-            lambda_flag = ''
-        else: # i >= 2:
-            lm_flag = '-mix-lm{0} {1}'.format(i, f[1])
-            lambda_flag = '-mix-lambda{0} {1}'.format(i, l)
+  i = 0
+  cmd = env.programs['ngram'] + ' ' + opts
+  for f, l in zip(lms, lambdas):
+    if i == 0:
+      lm_flag = '-lm {0}'.format(f[1])
+      lambda_flag = '-lambda {0}'.format(l)
+    elif i == 1:
+      lm_flag = '-mix-lm {0}'.format(f[1])
+      lambda_flag = ''
+    else: # i >= 2:
+      lm_flag = '-mix-lm{0} {1}'.format(i, f[1])
+      lambda_flag = '-mix-lambda{0} {1}'.format(i, l)
 
-        cmd += ' {0} {1}'.format(lm_flag, lambda_flag)
-        i += 1
-    cmd += ' -write-lm {0}'.format(out)
-    print >>logs, 'Executing: {0}'.format(cmd)
-    return shlex.split(cmd)
+    cmd += ' {0} {1}'.format(lm_flag, lambda_flag)
+    i += 1
+  cmd += ' -write-lm {0}'.format(out)
+  print >>logs, 'Executing: {0}'.format(cmd)
+  return shlex.split(cmd)
 
 def combine(env, opts, lms, lambdas, out):
-    cmd = combine_wrapper(env, opts, lms, lambdas, out)
-    try:
-      process = subprocess.Popen(cmd)
-    except:
-      print '=========='
-      print 'ERROR: {0}'.format(' '.join(sys.argv))
-      print '=========='
-      raise
-    process.wait()
+  cmd = combine_wrapper(env, opts, lms, lambdas, out)
+  try:
+    process = subprocess.Popen(cmd)
+  except:
+    print '=========='
+    print 'ERROR: {0}'.format(' '.join(sys.argv))
+    print '=========='
+    raise
+  process.wait()
 
 def pretty_print_lambdas(lms, lambdas):
   print '{0: >20} | lambda'.format('LM')
   print '-' * 31
   for lm, v in zip(lms, lambdas):
-      print '{0: >20} | {1}'.format(lm[0], v)
+    print '{0: >20} | {1}'.format(lm[0], v)
 
 def main_internal(argv):
   opts, unused_args = parser.parse_args(argv[1:])
@@ -99,20 +99,19 @@ def main_internal(argv):
   lms = config.items('language models')
 
   if len(unused_args) == 0:
-      print 'Error: {0} filename'.format(argv[0])
-      raise
+    print 'Error: {0} filename'.format(argv[0])
+    raise
   lambdas = read_best_lambdas(unused_args[0])
 
   if len(lambdas) > 9:
-      raise srienv.SRILMError('SRILM does not support mixing larger than 9 language models.')
+    raise srienv.SRILMError('SRILM does not support mixing larger than 9 language models.')
 
   if len(lambdas) != len(lms):
-      raise srienv.FormatError("Incompatible the number of lambdas with the number of language models in {0}: "
-                               "the number of lambdas is {1}, the number of language models is {2}.".format(
-              opts.conf, len(lambdas), len(lms)))
+    raise srienv.FormatError("Incompatible the number of lambdas with the number of language models in {0}: "
+                             "the number of lambdas is {1}, the number of language models is {2}.".format(
+        opts.conf, len(lambdas), len(lms)))
 
   pretty_print_lambdas(lms, lambdas)
-
   combine_opt = config.get('SRILM', 'opt')
   combine(env, combine_opt, lms, lambdas, opts.out)
 

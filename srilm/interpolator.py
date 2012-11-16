@@ -25,11 +25,11 @@ import srienv
 
 parser = optparse.OptionParser(usage='%prog [options]')
 parser.add_option('-c', '--config', dest='conf',
-    default=None, help='Path to config files (mandatory).')
+                  default=None, help='Path to config files (mandatory).')
 parser.add_option('-o', '--out', dest='out',
-    default='best-mix.ppl', help='Path to the file that contains the best lambdas')
+                  default='best-mix.ppl', help='Path to the file that contains the best lambdas')
 parser.add_option('--cpus', dest='cpus', type='int',
-    default=1, help='Number of processes to be used when computing perplexities.')
+                  default=1, help='Number of processes to be used when computing perplexities.')
 
 logs = sys.stderr
 
