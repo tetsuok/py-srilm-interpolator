@@ -77,10 +77,20 @@ def calc_perplexity(env, config, tmpdir, cpus):
   print >>logs, 'Resulting perplexity files are written to {0}'.format(tmpdir)
 
 def compute_best_mix(bin, lms, tmpdir, out):
-  files = ' '.join([os.path.join(tmpdir, lm[0] + '.ppl') for lm in lms])
-  cmd = ' '.join([bin, files, '> {0}'.format(out)])
-  print >>logs, 'Executing {0}'.format(cmd)
-  os.system(cmd)
+  files = [os.path.join(tmpdir, lm[0] + '.ppl') for lm in lms]
+  cmd = [bin] + files
+  print >>logs, 'Executing {0} > {1}'.format(' '.join(cmd), out)
+  try:
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                               universal_newlines=True)
+  except:
+    print 'ERROR: {0}'.format(' '.join(cmd))
+    raise
+  (stdout_content, _) = process.communicate()
+
+  with open(out, 'w') as fout:
+    fout.write(stdout_content)
+  return process.wait()
 
 def main_internal(argv):
   opts, unused_args = parser.parse_args(argv[1:])
