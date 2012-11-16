@@ -16,11 +16,11 @@ import multiprocessing
 import optparse
 import os
 import shlex
-import subprocess
 import sys
 import tempfile
 from ConfigParser import ConfigParser
 
+import helper
 import srienv
 
 parser = optparse.OptionParser(usage='%prog [options]')
@@ -43,18 +43,7 @@ def _calc_perplexity(cmd_str):
   cmds = shlex.split(cmd_str)
   cmd = cmds[:-1]
   out_file = cmds[-1]
-
-  try:
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                               universal_newlines=True)
-  except:
-    print 'ERROR: %s' % cmd_str
-    raise
-
-  (stdout_content, _) = process.communicate()
-  with open(out_file, 'w') as fout:
-    fout.write(stdout_content)
-  return process.wait()
+  return helper.redirect(cmd, out_file)
 
 def setup_perplexity_tasks(env, opts, lms, devset, tmpdir):
   cmd = env.programs['ngram']
@@ -80,17 +69,7 @@ def compute_best_mix(bin, lms, tmpdir, out):
   files = [os.path.join(tmpdir, lm[0] + '.ppl') for lm in lms]
   cmd = [bin] + files
   print >>logs, 'Executing {0} > {1}'.format(' '.join(cmd), out)
-  try:
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
-                               universal_newlines=True)
-  except:
-    print 'ERROR: {0}'.format(' '.join(cmd))
-    raise
-  (stdout_content, _) = process.communicate()
-
-  with open(out, 'w') as fout:
-    fout.write(stdout_content)
-  return process.wait()
+  return helper.redirect(cmd, out)
 
 def main_internal(argv):
   opts, unused_args = parser.parse_args(argv[1:])

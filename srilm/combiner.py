@@ -21,10 +21,10 @@ import optparse
 import os
 import re
 import shlex
-import subprocess
 import sys
 from ConfigParser import ConfigParser
 
+import helper
 import srienv
 
 parser = optparse.OptionParser(usage='%prog [options]')
@@ -69,14 +69,7 @@ def combine_wrapper(env, opts, lms, lambdas, out):
 
 def combine(env, opts, lms, lambdas, out):
   cmd = combine_wrapper(env, opts, lms, lambdas, out)
-  try:
-    process = subprocess.Popen(cmd)
-  except:
-    print '=========='
-    print 'ERROR: {0}'.format(' '.join(sys.argv))
-    print '=========='
-    raise
-  process.wait()
+  helper.run_or_die(cmd, ' '.join(sys.argv))
 
 def pretty_print_lambdas(lms, lambdas):
   print '{0: >20} | lambda'.format('LM')
